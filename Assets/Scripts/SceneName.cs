@@ -5,6 +5,6 @@ using UnityEngine;
 public enum SceneName
 {
     StartMenu,
-    Main
+    GamePlay
 }
 

@@ -13,7 +13,7 @@ public class StartMenuManager : MonoBehaviour
     
     public static StartMenuManager Instance;
     public string Name;
-
+    
     private void Awake()
     {
         if (Instance != null)
@@ -35,6 +35,7 @@ public class StartMenuManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    //Since the scene is loaded again with destroyed components, we need to fetch the current ones.
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.buildIndex == (int)SceneName.StartMenu)
@@ -53,14 +54,11 @@ public class StartMenuManager : MonoBehaviour
 
     public void SavePlayerName()
     {
-        Debug.Log("asd");
-
         if (Instance != null)
         {
-            Debug.Log("Saving player name");
             Instance.Name = inputName.text;
             inputName.text = string.Empty;
-            SceneManager.LoadScene((int)SceneName.Main);
+            SceneManager.LoadScene((int)SceneName.GamePlay);
         }
     }
     
