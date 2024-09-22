@@ -1,8 +1,22 @@
 using System;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
+public class Player
+{
+    public int score;
+    public string playerName;
+    public Dragon character;
+}
+
+// INHERITANCE
+public abstract class PlayerCharacter : MonoBehaviour
+{
+    public abstract void AddForce();
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -11,9 +25,10 @@ public class GameManager : MonoBehaviour
 
     public Button backButton;
 
-    public static GameManager Instance;
+    //ENCAPSULATION
+    public static GameManager Instance { get; private set; }
 
-    private int score;
+    private Player player = new();
     public Score topPlayer = new();
 
     private void Awake()
@@ -26,10 +41,6 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-    }
-
-    void Start()
-    {
     }
 
     private void OnEnable()
@@ -50,21 +61,27 @@ public class GameManager : MonoBehaviour
             topPlayerScore = GameObject.Find("Top Player").GetComponent<TMP_Text>();
             playerScore = GameObject.Find("Score").GetComponent<TMP_Text>();
             backButton = GameObject.Find("Back Button").GetComponent<Button>();
-            
+
             if (StartMenuManager.Instance != null)
             {
+                player.playerName = StartMenuManager.Instance.Name;
+                
                 if (topPlayer.Points > 0)
                     topPlayerScore.text = $"{topPlayer.Name}: {topPlayer.Points}";
 
                 Debug.Log(StartMenuManager.Instance.Name);
-                playerScore.text = $"{StartMenuManager.Instance.Name}: 0";
+                SetScoreText(0);
             }
 
-            
             // Clear the input field and reattach the listener
             backButton.onClick.RemoveAllListeners();
             backButton.onClick.AddListener(Back);
         }
+    }
+
+    private void SetScoreText(int points)
+    {
+        playerScore.text = $"{player.playerName}: {points}";
     }
 
     void Back()
@@ -74,7 +91,19 @@ public class GameManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void AddScore(int points)
     {
+        player.score += points;
+        SetScoreText(player.score);
+    }
+
+
+    public void Exit()
+    {
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit(); // original code to quit Unity player
+#endif
     }
 }

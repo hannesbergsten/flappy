@@ -11,7 +11,8 @@ public class StartMenuManager : MonoBehaviour
     public TMP_InputField inputName;
     public Button saveButton;
     
-    public static StartMenuManager Instance;
+    //ENCAPSULATION
+    public static StartMenuManager Instance { get; private set; }
     public string Name;
     
     private void Awake()
@@ -62,12 +63,4 @@ public class StartMenuManager : MonoBehaviour
         }
     }
     
-    public void Exit()
-    {
-#if UNITY_EDITOR
-        EditorApplication.ExitPlaymode();
-#else
-        Application.Quit(); // original code to quit Unity player
-#endif
-    }
 }
